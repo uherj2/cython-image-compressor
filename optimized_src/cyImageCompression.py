@@ -1,7 +1,7 @@
 from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
-import sys
+import os
 from collections import defaultdict
 from matplotlib.widgets import Slider, Button
 
@@ -75,7 +75,10 @@ class imageCompressor:
 global current_kvalue
 
 # List of image filenames
-image_title_list = ["test1.jpg", "test2.jpg", "test3.jpg", "test4.jpg", "test5.jpg"]
+IMAGE_DIR = "../test_images"
+file_names = ["test1.jpg", "test2.jpg", "test3.jpg", "test4.jpg", "test5.jpg"]
+image_title_list = [os.path.join(IMAGE_DIR, name) for name in file_names]
+
 image_compressor_list = []
 for image in image_title_list:
     current_image = Image.open(image)
@@ -85,7 +88,7 @@ for image in image_title_list:
 
 # Load the initial image
 current_image_index = 0
-initialImage = imageCompressor("test1.jpg")
+initialImage = imageCompressor(image_title_list[current_image_index])
 image = Image.open(image_title_list[current_image_index])
 image_array = np.array(image) / 255.0  # Normalize to range [0, 1]
 

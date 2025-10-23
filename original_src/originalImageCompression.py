@@ -1,5 +1,6 @@
 from PIL import Image
 import matplotlib.pyplot as plt
+import os
 import numpy as np
 from collections import defaultdict
 from matplotlib.widgets import Slider, Button
@@ -84,7 +85,10 @@ class imageCompressor:
 global current_kvalue
 
 # List of image filenames
-image_title_list = ["test1.jpg", "test2.jpg", "test3.jpg", "test4.jpg", "test5.jpg"]
+IMAGE_DIR = "../test_images"
+file_names = ["test1.jpg", "test2.jpg", "test3.jpg", "test4.jpg", "test5.jpg"]
+image_title_list = [os.path.join(IMAGE_DIR, name) for name in file_names]
+
 image_compressor_list = []
 for image in image_title_list:
     current_image = Image.open(image)
@@ -94,7 +98,7 @@ for image in image_title_list:
 
 # Load the initial image
 current_image_index = 0
-initialImage = imageCompressor("test1.jpg")
+initialImage = imageCompressor(image_title_list[current_image_index])
 image = Image.open(image_title_list[current_image_index])
 image_array = np.array(image) / 255.0  # Normalize to range [0, 1]
 
@@ -114,9 +118,6 @@ slider = Slider(ax_slider, 'Compression', 0, 5, valinit=0, valstep=1)
 # Update function for slider
 def update(val):
     scale = slider.val
-    # current_kvalue = slider.val
-    # Scale the brightness of the image
-    # adjusted_image = np.clip(image_array * scale, 0, 5)  # Keep values in range [0, 1]
     adjusted_image = image_compressor_list[current_image_index].get_image(slider.val)
     img_display.set_data(adjusted_image)  # Update the displayed image
     fig.canvas.draw_idle()  # Redraw the canvas
@@ -134,8 +135,6 @@ def change_image(direction):
     # Load the new image and update the display
     placeholder = slider.val
     print(placeholder)
-    # curImage = Image.open(image_title_list[current_image_index])
-    # image_array = np.array(curImage) / 255.0  # Normalize to range [0, 1]
     image_array = image_compressor_list[current_image_index].get_image(slider.val)
     img_display.set_data(image_array)  # Update the displayed image
     fig.canvas.draw_idle()  # Redraw the canvas
