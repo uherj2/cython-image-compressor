@@ -1,0 +1,7 @@
+{
+    "files.associations":{
+        "*.pyx": "python",
+        "*.pxd": "python"
+    },
+    "python.analysis.typeCheckingMode": "off"
+}
