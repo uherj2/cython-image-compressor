@@ -5,7 +5,6 @@ import numpy as np
 from collections import defaultdict
 from matplotlib.widgets import Slider, Button
 
-
 class imageCompressor:
     def __init__(self, selected_image):
         self.selected_image = selected_image
@@ -14,7 +13,6 @@ class imageCompressor:
         # original image stores the original image
         # uses PIL library to load and convert image to numpy array
         self.original_image = np.array(Image.open(self.selected_image))
-
 
         # a dictionary that maps each k value to its corresponding compressed image (np array)
         self.kmeans_images = defaultdict(lambda: None)
@@ -83,6 +81,7 @@ class imageCompressor:
 
 
 global current_kvalue
+MAX_PIXEL_INTENSITY_VALUE = 255.0
 
 # List of image filenames
 IMAGE_DIR = "../test_images"
@@ -92,7 +91,7 @@ image_title_list = [os.path.join(IMAGE_DIR, name) for name in file_names]
 image_compressor_list = []
 for image in image_title_list:
     current_image = Image.open(image)
-    image_array = np.array(current_image) / 255.0
+    image_array = np.array(current_image) / MAX_PIXEL_INTENSITY_VALUE # Normalize to range [0, 1]
     compressor_object = imageCompressor(image)
     image_compressor_list.append(compressor_object)
 
@@ -100,12 +99,12 @@ for image in image_title_list:
 current_image_index = 0
 initialImage = imageCompressor(image_title_list[current_image_index])
 image = Image.open(image_title_list[current_image_index])
-image_array = np.array(image) / 255.0  # Normalize to range [0, 1]
+image_array = np.array(image) / MAX_PIXEL_INTENSITY_VALUE  # Normalize to range [0, 1]
 
 # Create the initial plot
 fig, ax = plt.subplots(figsize=(8, 8))
 plt.subplots_adjust(bottom=0.3)  # Adjust space for buttons and slider
-ax.set_title("compression Adjustment")
+ax.set_title("Compression Adjustment")
 ax.axis('off')
 
 # Display the initial image

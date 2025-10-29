@@ -7,20 +7,16 @@ from matplotlib.widgets import Slider, Button
 
 import critical_calc
 
-
 class imageCompressor:
     def __init__(self, selected_image):
         self.selected_image = selected_image
         # print(selected_image)
-
         # original image stores the original image
         # uses PIL library to load and convert image to numpy array
         self.original_image = np.array(Image.open(self.selected_image))
 
-
         # a dictionary that maps each k value to its corresponding compressed image (np array)
         self.kmeans_images = defaultdict(lambda: None)
-
 
     # method that accepts a k and preforms k means
     # result stored in k means images
@@ -34,8 +30,6 @@ class imageCompressor:
         # centroids
         centroids = critical_calc.initialize_centroids(data, k)
 
- 
-
         for i in range(MAX_ITERS):
             # assign clusters
             label = critical_calc.assign_clusters(data, centroids)
@@ -48,7 +42,6 @@ class imageCompressor:
                 break
 
             centroids = new_centroids
-
 
         new_image = critical_calc.apply_label(label, centroids)
         new_image = new_image.astype(np.uint8)
@@ -71,8 +64,8 @@ class imageCompressor:
 
         return self.kmeans_images[k]
 
-
 global current_kvalue
+MAX_PIXEL_INTENSITY_VALUE = 255.0
 
 # List of image filenames
 IMAGE_DIR = "../test_images"
@@ -82,7 +75,7 @@ image_title_list = [os.path.join(IMAGE_DIR, name) for name in file_names]
 image_compressor_list = []
 for image in image_title_list:
     current_image = Image.open(image)
-    image_array = np.array(current_image) / 255.0
+    image_array = np.array(current_image) / MAX_PIXEL_INTENSITY_VALUE
     compressor_object = imageCompressor(image)
     image_compressor_list.append(compressor_object)
 
@@ -90,12 +83,12 @@ for image in image_title_list:
 current_image_index = 0
 initialImage = imageCompressor(image_title_list[current_image_index])
 image = Image.open(image_title_list[current_image_index])
-image_array = np.array(image) / 255.0  # Normalize to range [0, 1]
+image_array = np.array(image) / MAX_PIXEL_INTENSITY_VALUE  # Normalize to range [0, 1]
 
 # Create the initial plot
 fig, ax = plt.subplots(figsize=(8, 8))
 plt.subplots_adjust(bottom=0.3)  # Adjust space for buttons and slider
-ax.set_title("compression Adjustment")
+ax.set_title("Compression Adjustment")
 ax.axis('off')
 
 # Display the initial image
@@ -103,7 +96,7 @@ img_display = ax.imshow(image_array)
 
 # Add a slider for brightness control
 ax_slider = plt.axes([0.25, 0.1, 0.5, 0.03])  # x, y, width, height
-slider = Slider(ax_slider, 'Compression', 0, 5, valinit=0, valstep=1)
+slider = Slider(ax_slider, 'Compression', 0, 10, valinit=0, valstep=1)
 
 # Update function for slider
 def update(val):
@@ -128,7 +121,7 @@ def change_image(direction):
     # Load the new image and update the display
     placeholder = slider.val
     # curImage = Image.open(image_title_list[current_image_index])
-    # image_array = np.array(curImage) / 255.0  # Normalize to range [0, 1]
+    # image_array = np.array(curImage) / MAX_PIXEL_INTENSITY_VALUE  # Normalize to range [0, 1]
     image_array = image_compressor_list[current_image_index].get_image(slider.val)
     img_display.set_data(image_array)  # Update the displayed image
     fig.canvas.draw_idle()  # Redraw the canvas
