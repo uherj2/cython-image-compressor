@@ -23,4 +23,4 @@ Global requirements:
 
 3. Run files `cyimageCompression.py` and `originalImageCopmression.py` in their respective folders
 
-Note: a comparison script that runs both files 
+Note: a comparison script that runs both files is not yet completed.
